@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_08_045000) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_08_064450) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,10 +62,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_045000) do
     t.index ["booking_id"], name: "index_payments_on_booking_id"
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "email_address"
     t.string "name"
+    t.string "password_digest"
     t.string "phone_number"
     t.string "role"
     t.datetime "updated_at", null: false
@@ -75,4 +86,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_045000) do
   add_foreign_key "bookings", "users"
   add_foreign_key "events", "categories"
   add_foreign_key "payments", "bookings"
+  add_foreign_key "sessions", "users"
 end

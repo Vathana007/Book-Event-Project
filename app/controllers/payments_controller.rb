@@ -13,7 +13,7 @@ class PaymentsController < ApplicationController
     @payment.transaction_ref = SecureRandom.hex(10)
     user = @booking.user
 
-    if @payment.payment_method == "Credit"
+    if @payment.payment_method == "credit_card"
     total_price = @booking.event.price * @booking.tickets
       if user.credit.to_f >= total_price
         ActiveRecord::Base.transaction do

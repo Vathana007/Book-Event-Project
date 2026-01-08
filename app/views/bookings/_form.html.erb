@@ -1,13 +1,10 @@
+<!-- filepath: app/views/bookings/_form.html.erb -->
 <h1 class="text-2xl font-bold mb-6 text-blue-900">Book Event: <%= @event.title %></h1>
 <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
   <%= form_with model: [@event, @booking] do |form| %>
     <div class="mb-4">
-      <%= form.label :name, class: "block text-gray-700 font-bold mb-2" %>
-      <%= form.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
-    </div>
-    <div class="mb-4">
-      <%= form.label :email, class: "block text-gray-700 font-bold mb-2" %>
-      <%= form.email_field :email, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+      <%= form.label :user_id, "Select User", class: "block text-gray-700 font-bold mb-2" %>
+      <%= form.collection_select :user_id, User.all, :id, :name, { prompt: "Choose a user" }, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
     </div>
     <div class="mb-4">
       <%= form.label :phone_number, class: "block text-gray-700 font-bold mb-2" %>
@@ -18,9 +15,8 @@
       <%= form.number_field :tickets, min: 1, max: @event.available_tickets, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
       <p class="text-sm text-gray-500">Available: <%= @event.available_tickets %></p>
     </div>
-    <%= form.hidden_field :user_id, value: 2 %>
     <div>
-      <%= form.submit "Book", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" %>
+      <%= form.submit "Checkout", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" %>
     </div>
   <% end %>
 </div>

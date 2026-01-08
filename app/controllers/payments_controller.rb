@@ -8,14 +8,33 @@ class PaymentsController < ApplicationController
   def create
     @payment = Payment.new(payment_params)
     @payment.booking = @booking
-    @payment.amount = @booking.event.price
+    @payment.amount = @booking.event.price * @booking.tickets
     @payment.status = :completed
     @payment.transaction_ref = SecureRandom.hex(10)
-    if @payment.save
-      @booking.update(status: :confirmed)
-      redirect_to events_path, notice: "Payment successful!"
+    user = @booking.user
+
+    if @payment.payment_method == "Credit"
+    total_price = @booking.event.price * @booking.tickets
+      if user.credit.to_f >= total_price
+        ActiveRecord::Base.transaction do
+          user.update!(credit: user.credit - total_price)
+          @booking.event.decrement!(:available_tickets, @booking.tickets)
+          @booking.update!(status: :confirmed)
+          @payment.save!
+        end
+        redirect_to booking_path(@booking), notice: "Payment successful and credit deducted!"
+      else
+        flash.now[:alert] = "Not enough credit."
+        render :new
+      end
     else
-      render :new
+      # Handle other payment methods (e.g., cash, card)
+      ActiveRecord::Base.transaction do
+        @booking.event.decrement!(:available_tickets, @booking.tickets)
+        @booking.update!(status: :confirmed)
+        @payment.save!
+      end
+      redirect_to booking_path(@booking), notice: "Payment successful!"
     end
   end
 

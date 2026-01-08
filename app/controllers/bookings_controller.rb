@@ -30,13 +30,48 @@ class BookingsController < ApplicationController
   end
 
   # POST /booking
+  # def create
+  #   @booking = Booking.new(booking_params)
+  #   @booking.event = @event
+  #   @booking.status = :pending
+  #   if @booking.save
+  #     @event.decrement!(:available_tickets, @booking.tickets)
+  #     redirect_to bookings_path, notice: 'Booking was successfully created.'
+  #   else
+  #     render :new
+  #   end
+  # end
+  # def create
+  #   @booking = Booking.new(booking_params)
+  #   @booking.event = @event
+  #   @booking.status = :pending
+  #   user = User.find(@booking.user_id)
+  #   @booking.name = user.name 
+  #   total_price = @event.price * @booking.tickets
+
+  #   if user.credit.to_f >= total_price
+  #     ActiveRecord::Base.transaction do
+  #       @booking.save!
+  #       @event.decrement!(:available_tickets, @booking.tickets)
+  #       user.update!(credit: user.credit - total_price)
+  #     end
+  #     redirect_to bookings_path, notice: 'Booking was successfully created and credit deducted.'
+  #   else
+  #     flash.now[:alert] = "Not enough credit to book this event."
+  #     render :new
+  #   end
+  # end
+
   def create
     @booking = Booking.new(booking_params)
     @booking.event = @event
     @booking.status = :pending
+    user = User.find(@booking.user_id)
+    @booking.name = user.name
+    @booking.email_address = user.email_address 
+
     if @booking.save
-      @event.decrement!(:available_tickets, @booking.tickets)
-      redirect_to bookings_path, notice: 'Booking was successfully created.'
+      redirect_to new_booking_payment_path(@booking)
     else
       render :new
     end
@@ -62,6 +97,6 @@ class BookingsController < ApplicationController
   end
 
   def booking_params
-    params.require(:booking).permit(:user_id, :name, :email, :phone_number, :tickets)
+    params.require(:booking).permit(:user_id, :name, :email_address, :phone_number, :tickets)
   end
 end

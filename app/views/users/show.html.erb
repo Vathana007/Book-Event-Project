@@ -8,6 +8,10 @@
   <strong>Email Address:</strong>
   <%= @user.email_address %>
 </p>
+<p> 
+  <strong>Credit:</strong>
+  <%= number_to_currency(@user.credit) %>
+</p>
 <p>
   <strong>Role:</strong>
   <%= @user.role %>

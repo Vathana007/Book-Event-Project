@@ -1,0 +1,61 @@
+<%= form_with(model: event, class: "max-w-lg mx-auto bg-white shadow-md rounded-lg p-6") do |form| %>
+  <% if event.errors.any? %>
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+      <h2 class="font-bold"><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
+      <ul>
+        <% event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :title, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :title, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_area :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :location, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :location, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :price, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.number_field :price, step: 0.01, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :available_tickets, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.number_field :available_tickets, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :start_time, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.datetime_select :start_time, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :end_time, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.datetime_select :end_time, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :image, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :image, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :category_id, "Category", class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.collection_select :category_id, Category.all, :id, :name, { prompt: "Select Category" }, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  </div>
+
+  <div>
+    <%= form.submit event.persisted? ? "Update Event" : "Create Event", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" %>
+  </div>
+<% end %>

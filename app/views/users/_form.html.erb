@@ -1,0 +1,36 @@
+<%= form_with(model: user, class: "max-w-lg mx-auto bg-white shadow-md rounded-lg p-6") do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+      <h2 class="font-bold"><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul class="list-disc list-inside">
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :name, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :email, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.email_field :email, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :role, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :role, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :phone_number, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.telephone_field :phone_number, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div>
+    <%= form.submit user.persisted? ? "Update User" : "Create User", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline" %>
+  </div>
+<% end %>

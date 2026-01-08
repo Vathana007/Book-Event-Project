@@ -1,0 +1,12 @@
+<h1>Event Details</h1>
+<p><strong>Title:</strong> <%= @event.title %></p>
+<p><strong>Description:</strong> <%= @event.description %></p>
+<p><strong>Location:</strong> <%= @event.location %></p>
+<p><strong>Start Time:</strong> <%= @event.start_time %></p>
+<p><strong>End Time:</strong> <%= @event.end_time %></p>
+<p><strong>Price:</strong> <%= number_to_currency(@event.price) %></p>
+<p><strong>Available Tickets:</strong> <%= @event.available_tickets %></p>
+<p><strong>Category:</strong> <%= @event.category&.name %></p>
+<%= link_to 'Booking', new_event_booking_path(@event), class: "text-green-600 hover:underline" %>
+<%= link_to 'Edit', edit_event_path(@event), class: "text-yellow-600 hover:underline" %> |
+<%= link_to 'Back', events_path, class: "text-blue-600 hover:underline" %>

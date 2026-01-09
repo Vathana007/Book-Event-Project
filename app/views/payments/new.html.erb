@@ -1,5 +1,9 @@
+<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/payments/new.html.erb -->
 <h1>Payment for Booking #<%= @booking.id %></h1>
-<p>Amount: <%= number_to_currency(@booking.event.price * @booking.tickets) %></p>
+<p>
+  Amount:
+  <%= number_to_currency(@booking.ticket_type&.price.to_f * @booking.tickets.to_i) %>
+</p>
 
 <% if flash[:alert] %>
   <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -10,7 +14,7 @@
 <%= form_with model: [@booking, @payment] do |form| %>
   <div class="mb-4">
     <%= form.label :payment_method, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.select :payment_method, Payment::PAYMENT_METHODS.map { |m| [m.titleize, m] }, {}, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+    <%= form.select :payment_method, Payment::PAYMENT_METHODS.map { |m| [m.titleize, m] }, {}, class: "form-control" %>
   </div>
-  <%= form.submit "Booking", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" %>
+  <%= form.submit "Complete Payment", class: "btn btn-primary" %>
 <% end %>

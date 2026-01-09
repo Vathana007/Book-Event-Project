@@ -1,25 +1,53 @@
-<h1>User Details</h1>
-
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
-</p>
-<p>
-  <strong>Email Address:</strong>
-  <%= @user.email_address %>
-</p>
-<p> 
-  <strong>Credit:</strong>
-  <%= number_to_currency(@user.credit) %>
-</p>
-<p>
-  <strong>Role:</strong>
-  <%= @user.role %>
-</p>
-<p>
-  <strong>Phone Number:</strong>
-  <%= @user.phone_number %>
-</p>
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/users/show.html.erb -->
+<div class="container-fluid mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card card-primary card-outline">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="card-title mb-0">
+            <i class="fas fa-user mr-2 text-primary"></i>
+            User Details
+          </h3>
+          <div>
+            <%= link_to edit_user_path(@user), class: "btn btn-warning btn-sm mr-2" do %>
+              <i class="fas fa-edit"></i> Edit
+            <% end %>
+            <%= link_to users_path, class: "btn btn-secondary btn-sm" do %>
+              <i class="fas fa-arrow-left"></i> Back
+            <% end %>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered mb-0">
+            <tbody>
+              <tr>
+                <th style="width: 200px;"><i class="fas fa-user mr-1 text-info"></i> Name</th>
+                <td><%= @user.name %></td>
+              </tr>
+              <tr>
+                <th><i class="fas fa-envelope mr-1 text-info"></i> Email Address</th>
+                <td><%= @user.email_address %></td>
+              </tr>
+              <tr>
+                <th><i class="fas fa-money-bill-wave mr-1 text-success"></i> Credit</th>
+                <td><%= number_to_currency(@user.credit) %></td>
+              </tr>
+              <tr>
+                <th><i class="fas fa-user-tag mr-1 text-info"></i> Role</th>
+                <td>
+                  <span class="badge <%= @user.role == 'admin' ? 'badge-danger' : 'badge-primary' %>">
+                    <%= @user.role.capitalize %>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th><i class="fas fa-phone mr-1 text-info"></i> Phone Number</th>
+                <td><%= @user.phone_number %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

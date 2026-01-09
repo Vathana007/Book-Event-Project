@@ -1,0 +1,9 @@
+<h2>Ticket Type: <%= @ticket_type.name %></h2>
+
+<ul>
+  <li><strong>Price:</strong> $<%= number_with_precision(@ticket_type.price, precision: 2) %></li>
+  <li><strong>Available Tickets:</strong> <%= @ticket_type.available_tickets %></li>
+</ul>
+
+<%= link_to "Edit", edit_event_ticket_type_path(@event, @ticket_type), class: "btn btn-warning" %>
+<%= link_to "Back", event_ticket_types_path(@event), class: "btn btn-secondary" %>

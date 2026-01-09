@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  # before_action :require_admin
 
   # GET /users
   def index
@@ -13,6 +14,7 @@ class UsersController < ApplicationController
 
   # GET /users/:id
   def show
+    @user = User.find(params[:id])
   end
 
   # GET /users/new
@@ -28,7 +30,9 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
-    if @user.save   
+    @user.role = "customer"
+    if @user.save 
+      session[:user_id] = @user.id
       redirect_to users_path, notice: 'User was successfully created.'
     else
       render :new

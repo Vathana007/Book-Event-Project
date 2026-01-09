@@ -1,0 +1,33 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">My Bookings</h1>
+
+  <% if @bookings.any? %>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @bookings.each do |booking| %>
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-gray-800 mb-2"><%= booking.event.title %></h2>
+              <p class="text-gray-600 mb-1"><i class="fas fa-calendar-alt mr-1"></i> <%= booking.event.start_time.strftime("%B %d, %Y at %I:%M %p") %></p>
+              <p class="text-gray-600 mb-1"><i class="fas fa-map-marker-alt mr-1"></i> <%= booking.event.location %></p>
+              <p class="text-gray-600 mb-1"><i class="fas fa-ticket-alt mr-1"></i> <%= booking.tickets %> ticket(s)</p>
+              <p class="text-green-700 font-semibold mb-2">Total: <%= number_to_currency(booking.total_price || 0) %></p>
+              <p class="text-gray-700 text-sm mb-2">Status: <%= booking.status.titleize %></p>
+            </div>
+            <div class="mt-4 flex gap-2">
+              <%= link_to "View Details", customer_booking_path(booking), class: "btn btn-outline-primary" %>
+              <% if booking.status == "pending" && !booking.payment %>
+                <%= link_to "Complete Payment", new_booking_payment_path(booking), class: "btn btn-primary" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-gray-50 rounded-lg p-12 text-center">
+      <p class="text-gray-600 text-lg mb-4">You haven't made any bookings yet.</p>
+      <%= link_to "Browse Events", events_path, class: "bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition inline-block" %>
+    </div>
+  <% end %>
+</div>

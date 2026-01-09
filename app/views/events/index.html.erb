@@ -1,4 +1,4 @@
-<h1 class="text-3xl font-bold mb-6 text-blue-900">Events</h1>
+<h1 class="text-3xl ">Events</h1>
 <div class="overflow-x-auto rounded-lg shadow-lg">
   <table class="min-w-full bg-white border border-gray-200">
     <thead class="bg-blue-100">
@@ -27,7 +27,9 @@
             <%= link_to 'Booking', new_event_booking_path(event), class: "text-green-600 hover:underline" %>
             <%= link_to 'Show', event_path(event), class: "text-blue-600 hover:underline" %>
             <%= link_to 'Edit', edit_event_path(event), class: "text-yellow-600 hover:underline ml-2" %>
-            <%= link_to 'Delete', event_path(event), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:underline ml-2" %>
+            <%= link_to 'Delete', event_path(event), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?'}, class: "text-red-600 hover:underline" %>
+
+            <%= link_to "Manage Ticket Types", event_ticket_types_path(event), class: "text-purple-600 hover:underline ml-2" %>
           </td>
         </tr>
       <% end %>

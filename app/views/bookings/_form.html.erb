@@ -1,22 +1,56 @@
-<!-- filepath: app/views/bookings/_form.html.erb -->
-<h1 class="text-2xl font-bold mb-6 text-blue-900">Book Event: <%= @event.title %></h1>
 <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
-  <%= form_with model: [@event, @booking] do |form| %>
-    <div class="mb-4">
-      <%= form.label :user_id, "Select User", class: "block text-gray-700 font-bold mb-2" %>
-      <%= form.collection_select :user_id, User.all, :id, :name, { prompt: "Choose a user" }, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+  <%= form_with model: [@event, @booking], local: true do |form| %>
+    <% if @booking.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <strong>Errors:</strong>
+        <ul>
+          <% @booking.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Step 1: Customer Information -->
+    <div class="mb-6 pb-6 border-b border-gray-300">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Customer Information</h3>
+      
+      <div class="mb-4">
+        <%= form.label :name, "Customer Name", class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.text_field :name, class: "form-control", placeholder: "Enter customer name" %>
+      </div>
+
+      <div class="mb-4">
+        <%= form.label :email_address, "Email Address", class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.email_field :email_address, class: "form-control", placeholder: "customer@example.com" %>
+      </div>
+
+      <div class="mb-4">
+        <%= form.label :phone_number, "Phone Number", class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.text_field :phone_number, class: "form-control", placeholder: "Enter phone number" %>
+      </div>
     </div>
-    <div class="mb-4">
-      <%= form.label :phone_number, class: "block text-gray-700 font-bold mb-2" %>
-      <%= form.text_field :phone_number, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
+
+    <!-- Step 2: Ticket Selection -->
+    <div class="mb-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Ticket Selection</h3>
+      
+      <div class="mb-4">
+        <%= form.label :ticket_type_id, "Select Ticket Type", class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.collection_select :ticket_type_id, @event.ticket_types, :id, 
+            ->(tt) { "#{tt.name} - #{number_to_currency(tt.price)} (#{tt.available_tickets} available)" }, 
+            { prompt: "Choose ticket type" }, 
+            class: "form-control" %>
+      </div>
+
+      <div class="mb-4">
+        <%= form.label :tickets, "Number of Tickets", class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.number_field :tickets, min: 1, class: "form-control", placeholder: "Enter number of tickets" %>
+      </div>
     </div>
-    <div class="mb-4">
-      <%= form.label :tickets, "Number of Tickets", class: "block text-gray-700 font-bold mb-2" %>
-      <%= form.number_field :tickets, min: 1, max: @event.available_tickets, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
-      <p class="text-sm text-gray-500">Available: <%= @event.available_tickets %></p>
-    </div>
+
     <div>
-      <%= form.submit "Checkout", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" %>
+      <%= form.submit "Proceed to Payment", class: "btn btn-primary w-full" %>
     </div>
   <% end %>
 </div>

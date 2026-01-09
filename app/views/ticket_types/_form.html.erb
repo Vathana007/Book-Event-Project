@@ -1,0 +1,28 @@
+<%= form_with(model: [@event, @ticket_type], local: true) do |form| %>
+  <% if @ticket_type.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @ticket_type.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group mb-3">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= form.label :price %>
+    <%= form.number_field :price, step: 0.01, class: "form-control" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= form.label :available_tickets %>
+    <%= form.number_field :available_tickets, class: "form-control" %>
+  </div>
+
+  <%= form.submit class: "btn btn-primary" %>
+<% end %>

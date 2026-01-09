@@ -1,19 +1,139 @@
-<h1 class="text-2xl font-bold mb-6 text-blue-900">Booking Details</h1>
-<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
-<p class="mb-2"><strong>Name:</strong> <%= @booking.name %></p>
-<p class="mb-2"><strong>Email:</strong> <%= @booking.user.email_address %></p>  <p class="mb-2"><strong>Phone:</strong> <%= @booking.phone_number %></p>
-<p class="mb-2"><strong>Status:</strong> <span class="capitalize"><%= @booking.status %></span></p>
-<hr class="my-4">
-<h2 class="text-xl font-semibold mb-2 text-blue-800">Event Information</h2>
-  <% if @booking.event %>
-    <p class="mb-2"><strong>Title:</strong> <%= @booking.event.title %></p>
-    <p class="mb-2"><strong>Location:</strong> <%= @booking.event.location %></p>
-    <p class="mb-2"><strong>Date:</strong> <%= @booking.event.start_time.strftime("%Y-%m-%d %H:%M") if @booking.event.start_time %></p>
-    <p class="mb-2"><strong>Price:</strong> <%= number_to_currency(@booking.event.price) %></p>
-    <p class="mb-2"><strong>Tickets Booked:</strong> <%= @booking.tickets %></p>
-    <p class="mb-2"><strong>Total Price:</strong> <%= number_to_currency(@booking.total_price) %></p>
-    <%= link_to 'Back', bookings_path, class: "text-blue-600 hover:underline" %>
-  <% else %>
-    <p>No event information available.</p>
+<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/bookings/show.html.erb -->
+<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8">
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">Booking #<%= @booking.id %></h1>
+      <p class="text-gray-600 mt-2">Created: <%= @booking.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    </div>
+    
+    <div>
+      <% case @booking.status %>
+      <% when "confirmed" %>
+        <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold">
+          ✓ Confirmed
+        </span>
+      <% when "pending" %>
+        <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-semibold">
+          ⏳ Pending Payment
+        </span>
+      <% when "cancelled" %>
+        <span class="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full font-semibold">
+          ✗ Cancelled
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <% if flash[:notice] %>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+      <%= flash[:notice] %>
+    </div>
   <% end %>
+
+  <div class="grid md:grid-cols-2 gap-6 mb-6">
+    <div class="bg-gray-50 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Event Information</h2>
+      <div class="space-y-3">
+        <div>
+          <span class="text-gray-600 block">Event:</span>
+          <span class="font-semibold text-lg"><%= @booking.event.title %></span>
+        </div>
+        <div>
+          <span class="text-gray-600 block">Location:</span>
+          <span class="font-semibold"><%= @booking.event.location %></span>
+        </div>
+        <div>
+          <span class="text-gray-600 block">Date:</span>
+          <span class="font-semibold"><%= @booking.event.start_time.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-50 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Customer Information</h2>
+      <div class="space-y-3">
+        <div>
+          <span class="text-gray-600 block">Name:</span>
+          <span class="font-semibold"><%= @booking.name %></span>
+        </div>
+        <div>
+          <span class="text-gray-600 block">Email:</span>
+          <span class="font-semibold"><%= @booking.email_address %></span>
+        </div>
+        <div>
+          <span class="text-gray-600 block">Phone:</span>
+          <span class="font-semibold"><%= @booking.phone_number %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-blue-50 rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Ticket Details</h2>
+    <div class="space-y-3">
+      <div class="flex justify-between">
+        <span class="text-gray-600">Ticket Type:</span>
+        <span class="font-semibold"><%= @booking.ticket_type.name %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-600">Number of Tickets:</span>
+        <span class="font-semibold"><%= @booking.tickets %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-600">Price per Ticket:</span>
+        <span class="font-semibold"><%= number_to_currency(@booking.ticket_type.price) %></span>
+      </div>
+      <hr class="my-2">
+      <div class="flex justify-between text-lg">
+        <span class="text-gray-800 font-bold">Total Amount:</span>
+        <span class="font-bold text-green-600"><%= number_to_currency(@booking.total_price) %></span>
+      </div>
+    </div>
+  </div>
+
+  <% if @booking.payment %>
+    <div class="bg-green-50 rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Payment Information</h2>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Payment Method:</span>
+          <span class="font-semibold"><%= @booking.payment.payment_method.titleize %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Transaction Reference:</span>
+          <span class="font-mono text-sm"><%= @booking.payment.transaction_ref %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Payment Status:</span>
+          <span class="font-semibold text-green-600"><%= @booking.payment.status.titleize %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Payment Date:</span>
+          <span class="font-semibold"><%= @booking.payment.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+      </div>
+    </div>
+  <% elsif @booking.status == "pending" %>
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-yellow-700">
+            This booking is pending payment. Please complete payment to confirm your booking.
+          </p>
+          <div class="mt-4">
+            <%= link_to "Complete Payment", new_booking_payment_path(@booking), class: "bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex gap-4">
+    <%= link_to "Back to Bookings", bookings_path, class: "bg-gray-600 hover:bg-gray-700 text-black font-bold py-2 px-4 rounded" %>
+  </div>
 </div>

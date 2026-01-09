@@ -1,2 +1,15 @@
-<h1 class="text-2xl font-bold mb-6 text-blue-900">Book Event: <%= @event.title %></h1>
-<%= render 'form', event: @event, booking: @booking %>
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Create Booking for <%= @event.title %></h1>
+    <p class="text-gray-600 mt-2">
+      Event Date: <%= @event.start_time.strftime("%B %d, %Y at %I:%M %p") %>
+    </p>
+    <p class="text-gray-600">Location: <%= @event.location %></p>
+  </div>
+
+  <%= render 'form' %>
+
+  <div class="text-center mt-6">
+    <%= link_to "← Back to Event", event_path(@event), class: "text-blue-600 hover:text-blue-800" %>
+  </div>
+</div>

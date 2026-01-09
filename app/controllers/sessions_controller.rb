@@ -5,10 +5,23 @@ class SessionsController < ApplicationController
   def new
   end
 
+  # def create
+  #   if user = User.authenticate_by(params.permit(:email_address, :password))
+  #     start_new_session_for user
+  #     redirect_to events_path, notice: "Logged in successfully."
+  #   else
+  #     redirect_to new_session_path, alert: "Try another email address or password."
+  #   end
+  # end
+
   def create
     if user = User.authenticate_by(params.permit(:email_address, :password))
       start_new_session_for user
-      redirect_to events_path, notice: "Logged in successfully."
+      if user.role == "admin"
+        redirect_to events_path, notice: "Logged in successfully as admin."
+      else
+        redirect_to customer_bookings_path, notice: "Logged in successfully."
+      end
     else
       redirect_to new_session_path, alert: "Try another email address or password."
     end

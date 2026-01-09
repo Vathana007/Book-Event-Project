@@ -1,51 +1,87 @@
-<%= form_with(model: user, class: "max-w-lg mx-auto bg-white shadow-md rounded-lg p-6") do |form| %>
-  <% if user.errors.any? %>
-    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
-      <h2 class="font-bold"><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-      <ul class="list-disc list-inside">
-        <% user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/users/_form.html.erb -->
+<div class="container-fluid mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h3 class="card-title mb-0">
+            <i class="fas fa-user-edit mr-2 text-primary"></i>
+            <%= user.persisted? ? "Edit User" : "New User" %>
+          </h3>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: user, class: "form-horizontal") do |form| %>
+            <% if user.errors.any? %>
+              <div class="alert alert-danger">
+                <h4><i class="icon fas fa-exclamation-triangle"></i>
+                  <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
+                </h4>
+                <ul>
+                  <% user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="form-group row">
+              <%= form.label :name, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.text_field :name, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :email_address, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.email_field :email_address, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :password, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.password_field :password, class: "form-control", autocomplete: "new-password" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :password_confirmation, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.password_field :password_confirmation, class: "form-control", autocomplete: "new-password" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :credit, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.number_field :credit, step: 0.01, min: 0, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :role, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.text_field :role, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :phone_number, class: "col-sm-3 col-form-label" %>
+              <div class="col-sm-9">
+                <%= form.telephone_field :phone_number, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-sm-9 offset-sm-3">
+                <%= form.submit user.persisted? ? "Update User" : "Create User", class: "btn btn-primary" %>
+                <%= link_to "Back", users_path, class: "btn btn-secondary ml-2" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-  <% end %>
-
-  <div class="mb-4">
-    <%= form.label :name, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
   </div>
-
-  <div class="mb-4">
-    <%= form.label :email_address, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.email_field :email_address, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div class="mb-4">
-  <%= form.label :password, class: "block text-gray-700 font-bold mb-2" %>
-  <%= form.password_field :password, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :password_confirmation, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.password_field :password_confirmation, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :credit, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.number_field :credit, step: 0.01, min: 0, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :role, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.text_field :role, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :phone_number, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.telephone_field :phone_number, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div>
-    <%= form.submit user.persisted? ? "Update User" : "Create User", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline" %>
-  </div>
-<% end %>
+</div>

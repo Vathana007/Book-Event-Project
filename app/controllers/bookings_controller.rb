@@ -3,16 +3,29 @@ require 'csv'
 class BookingsController < ApplicationController
   before_action :set_event, only: [:new, :create]
   before_action :set_booking, only: [:show]
-  before_action :require_admin
+  before_action :require_admin, except: [:index, :show, :new, :create]
 
    # GET /booking
   def index
-    if params[:q].present?
-      query = params[:q]
-      @bookings = Booking.includes(:event)
-        .where("CAST(bookings.id AS TEXT) ILIKE ? OR bookings.name ILIKE ?", "%#{query}%", "%#{query}%")
+    if Current.user&.role == "admin"
+      # Admin sees all bookings
+      if params[:q].present?
+        query = params[:q]
+        @bookings = Booking.includes(:event)
+          .where("CAST(bookings.id AS TEXT) ILIKE ? OR bookings.name ILIKE ?", "%#{query}%", "%#{query}%")
+      else
+        @bookings = Booking.includes(:event).all
+      end
     else
-      @bookings = Booking.includes(:event).all
+      # Customer sees only their own bookings
+      if params[:q].present?
+        query = params[:q]
+        @bookings = Booking.includes(:event)
+          .where(user_id: Current.user.id)
+          .where("CAST(bookings.id AS TEXT) ILIKE ? OR bookings.name ILIKE ?", "%#{query}%", "%#{query}%")
+      else
+        @bookings = Booking.includes(:event).where(user_id: Current.user.id)
+      end
     end
   end
 

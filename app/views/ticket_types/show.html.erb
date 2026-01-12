@@ -1,9 +1,59 @@
-<h2>Ticket Type: <%= @ticket_type.name %></h2>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-ticket-alt mr-2 text-primary"></i>
+        <h1 class="m-0 text-dark">Ticket Type Details</h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to edit_event_ticket_type_path(@event, @ticket_type), class: "btn btn-warning mr-2" do %>
+          <i class="fas fa-edit"></i> Edit
+        <% end %>
+        <%= link_to event_ticket_types_path(@event), class: "btn btn-secondary" do %>
+          <i class="fas fa-arrow-left"></i> Back
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
 
-<ul>
-  <li><strong>Price:</strong> $<%= number_with_precision(@ticket_type.price, precision: 2) %></li>
-  <li><strong>Available Tickets:</strong> <%= @ticket_type.available_tickets %></li>
-</ul>
-
-<%= link_to "Edit", edit_event_ticket_type_path(@event, @ticket_type), class: "btn btn-warning" %>
-<%= link_to "Back", event_ticket_types_path(@event), class: "btn btn-secondary" %>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-body">
+          <table class="table table-bordered mb-0">
+            <tbody>
+              <tr>
+                <th class="bg-light" style="width: 200px;">
+                  <i class="fas fa-tag mr-1 text-info"></i> Name
+                </th>
+                <td><%= @ticket_type.name %></td>
+              </tr>
+              <tr>
+                <th class="bg-light">
+                  <i class="fas fa-dollar-sign mr-1 text-success"></i> Price
+                </th>
+                <td>
+                  <span class="badge badge-success">
+                    $<%= number_with_precision(@ticket_type.price, precision: 2) %>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th class="bg-light">
+                  <i class="fas fa-ticket-alt mr-1 text-info"></i> Available Tickets
+                </th>
+                <td>
+                  <span class="badge badge-info">
+                    <%= @ticket_type.available_tickets %>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

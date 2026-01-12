@@ -1,46 +1,78 @@
-<h1 class="text-3xl font-bold mb-6 text-blue-900">Users</h1>
-
-<div class="overflow-x-auto rounded-lg shadow-lg">
-  <table class="min-w-full bg-white border border-gray-200">
-    <thead class="bg-blue-100">
-      <tr>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Name</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Email_Address</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Role</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Phone Number</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600"></th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600"></th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600"></th>
-      </tr>
-    </thead>
-    <%= form_with url: users_path, method: :get, local: true, class: "mb-4" do %>
-      <div class="flex">
-        <%= text_field_tag :q, params[:q], placeholder: "Search by ID or Name...", class: "border rounded-l px-4 py-2 w-full" %>
-        <%= submit_tag "Search", class: "bg-blue-600 text-white px-4 py-2 rounded-r" %>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-user mr-2 text-primary"></i>
+        <h1 class="m-0 text-dark">Users Management</h1>
       </div>
-    <% end %>
-    <tbody>
-      <% @users.each do |user| %>
-        <tr class="hover:bg-gray-50 transition duration-200">
-          <td class="py-3 px-4 border-b text-sm"><%= user.name %></td>
-          <td class="py-3 px-4 border-b text-sm"><%= user.email_address %></td>
-          <td class="py-3 px-4 border-b text-sm"><%= user.role %></td>
-          <td class="py-3 px-4 border-b text-sm"><%= user.phone_number %></td>
-          <td class="py-3 px-4 border-b text-sm">
-            <%= link_to 'Show', user_path(user), class: "text-blue-600 hover:underline" %>
-          </td>
-          <td class="py-3 px-4 border-b text-sm">
-            <%= link_to 'Edit', edit_user_path(user), class: "text-yellow-600 hover:underline" %>
-          </td>
-          <td class="py-3 px-4 border-b text-sm">
-           <%= link_to 'Delete', user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?'}, class: "text-red-600 hover:underline" %>
-          </td> 
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+      <div class="col-sm-6 text-right">
+        <%= link_to new_user_path, class: "btn btn-primary" do %>
+          <i class="fas fa-plus mr-1"></i>
+          New User
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="mt-6">
-  <%= link_to 'New User', new_user_path, class: "inline-block bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200 hover:bg-blue-700 shadow" %>
+<div class="container-fluid">
+  <div class="card card-primary card-outline">
+    <div class="card-header">
+      <%= form_with url: users_path, method: :get, local: true, class: "form-inline" do %>
+        <div class="input-group input-group-sm" style="width: 300px;">
+          <%= text_field_tag :q, params[:q], placeholder: "Search by ID or Name...", class: "form-control" %>
+          <div class="input-group-append">
+            <%= submit_tag "Search", class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="card-body p-0">
+      <div style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-hover table-bordered mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th>Email Address</th>
+              <th>Role</th>
+              <th>Phone Number</th>
+              <th class="text-center" colspan="3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email_address %></td>
+                <td>
+                  <span class="badge <%= user.role == 'admin' ? 'badge-danger' : 'badge-primary' %>">
+                    <%= user.role.capitalize %>
+                  </span>
+                </td>
+                <td><%= user.phone_number %></td>
+                <td class="text-center">
+                  <%= link_to user_path(user), class: "btn btn-info btn-sm", title: "Show" do %>
+                    <i class="fas fa-eye"></i>
+                    <span class="ml-1 d-none d-md-inline">Show</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to edit_user_path(user), class: "btn btn-warning btn-sm", title: "Edit" do %>
+                    <i class="fas fa-edit"></i>
+                    <span class="ml-1 d-none d-md-inline">Edit</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm", title: "Delete" do %>
+                    <i class="fas fa-trash"></i>
+                    <span class="ml-1 d-none d-md-inline">Delete</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

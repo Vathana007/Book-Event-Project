@@ -1,26 +1,66 @@
-<%= form_with(model: category, class: "max-w-lg mx-auto bg-white shadow-md rounded-lg p-6") do |form| %>
-  <% if category.errors.any? %>
-    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
-      <h2 class="font-bold"><%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:</h2>
-      <ul class="list-disc list-inside">
-        <% category.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/categories/_form.html.erb -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <i class="fas fa-list-alt mr-2 <%= category.persisted? ? 'text-warning' : 'text-primary' %>"></i>
+          <%= category.persisted? ? "Edit Category" : "New Category" %>
+        </h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to "Back", categories_path, class: "btn btn-secondary" %>
+      </div>
     </div>
-  <% end %>
-
-  <div class="mb-4">
-    <%= form.label :name, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
   </div>
+</div>
 
-  <div class="mb-4">
-    <%= form.label :description, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.text_field :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card <%= category.persisted? ? 'card-warning' : 'card-primary' %> card-outline shadow-sm">
+        <div class="card-body">
+          <%= form_with(model: category, class: "form-horizontal") do |form| %>
+            <% if category.errors.any? %>
+              <div class="alert alert-danger">
+                <h4><i class="icon fas fa-exclamation-triangle"></i>
+                  <%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:
+                </h4>
+                <ul>
+                  <% category.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
 
-  <div>
-    <%= form.submit category.persisted? ? "Update Category" : "Create Category", class: "bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline" %>
+            <div class="form-group row">
+              <%= form.label :name, class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.text_field :name, class: "form-control", placeholder: "Enter category name" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :description, class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.text_field :description, class: "form-control", placeholder: "Enter description" %>
+              </div>
+            </div>
+
+            <div class="form-group row mt-4">
+              <div class="col-sm-9 offset-sm-3">
+                <% if category.persisted? %>
+                  <%= form.submit "Update Category", class: "btn btn-warning" %>
+                <% else %>
+                  <%= form.submit "Create Category", class: "btn btn-primary" %>
+                <% end %>
+                <%= link_to "Cancel", categories_path, class: "btn btn-outline-secondary ml-2" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-<% end %>
+</div>

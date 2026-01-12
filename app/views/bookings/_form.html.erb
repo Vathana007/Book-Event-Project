@@ -1,56 +1,83 @@
-<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
-  <%= form_with model: [@event, @booking], local: true do |form| %>
-    <% if @booking.errors.any? %>
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <strong>Errors:</strong>
-        <ul>
-          <% @booking.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-ticket-alt mr-2 text-primary"></i>
+        <h1 class="m-0 text-dark">New Booking for <%= @event.title %></h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to "Back", back_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-body">
+          <%= form_with model: [@event, @booking], local: true, class: "form-horizontal" do |form| %>
+            <% if @booking.errors.any? %>
+              <div class="alert alert-danger">
+                <strong>Errors:</strong>
+                <ul>
+                  <% @booking.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <!-- Customer Information -->
+            <div class="form-group row">
+              <%= form.label :name, "Customer Name", class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.text_field :name, class: "form-control", placeholder: "Enter customer name" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :email_address, "Email Address", class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.email_field :email_address, class: "form-control", placeholder: "customer@example.com" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :phone_number, "Phone Number", class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.text_field :phone_number, class: "form-control", placeholder: "Enter phone number" %>
+              </div>
+            </div>
+
+            <!-- Ticket Selection -->
+            <div class="form-group row">
+              <%= form.label :ticket_type_id, "Select Ticket Type", class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.collection_select :ticket_type_id, @event.ticket_types, :id, 
+                  ->(tt) { "#{tt.name} - #{number_to_currency(tt.price)} (#{tt.available_tickets} available)" }, 
+                  { prompt: "Choose ticket type" }, 
+                  class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= form.label :tickets, "Number of Tickets", class: "col-sm-3 col-form-label font-weight-bold" %>
+              <div class="col-sm-9">
+                <%= form.number_field :tickets, min: 1, class: "form-control", placeholder: "Enter number of tickets" %>
+              </div>
+            </div>
+
+            <div class="form-group row mt-4">
+              <div class="col-sm-9 offset-sm-3">
+                <%= form.submit "Proceed to Payment", class: "btn btn-primary" %>
+                <%= link_to "Cancel", back_path, class: "btn btn-outline-secondary ml-2" %>
+              </div>
+            </div>
           <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <!-- Step 1: Customer Information -->
-    <div class="mb-6 pb-6 border-b border-gray-300">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Customer Information</h3>
-      
-      <div class="mb-4">
-        <%= form.label :name, "Customer Name", class: "block text-gray-700 font-bold mb-2" %>
-        <%= form.text_field :name, class: "form-control", placeholder: "Enter customer name" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :email_address, "Email Address", class: "block text-gray-700 font-bold mb-2" %>
-        <%= form.email_field :email_address, class: "form-control", placeholder: "customer@example.com" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :phone_number, "Phone Number", class: "block text-gray-700 font-bold mb-2" %>
-        <%= form.text_field :phone_number, class: "form-control", placeholder: "Enter phone number" %>
+        </div>
       </div>
     </div>
-
-    <!-- Step 2: Ticket Selection -->
-    <div class="mb-6">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Ticket Selection</h3>
-      
-      <div class="mb-4">
-        <%= form.label :ticket_type_id, "Select Ticket Type", class: "block text-gray-700 font-bold mb-2" %>
-        <%= form.collection_select :ticket_type_id, @event.ticket_types, :id, 
-            ->(tt) { "#{tt.name} - #{number_to_currency(tt.price)} (#{tt.available_tickets} available)" }, 
-            { prompt: "Choose ticket type" }, 
-            class: "form-control" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :tickets, "Number of Tickets", class: "block text-gray-700 font-bold mb-2" %>
-        <%= form.number_field :tickets, min: 1, class: "form-control", placeholder: "Enter number of tickets" %>
-      </div>
-    </div>
-
-    <div>
-      <%= form.submit "Proceed to Payment", class: "btn btn-primary w-full" %>
-    </div>
-  <% end %>
+  </div>
 </div>

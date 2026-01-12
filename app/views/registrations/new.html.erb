@@ -1,54 +1,70 @@
-<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/registrations/new.html.erb -->
-<h1 class="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-<%= form_with model: @user, url: registration_path, local: true, class: "space-y-6" do |form| %>
-  
+<p class="login-box-msg">Create your account</p>
+<%= form_with model: @user, url: registration_path, local: true do |form| %>
   <% if @user.errors.any? %>
-    <div class="bg-red-50 border-l-4 border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-      <div class="flex">
-        <i class="fas fa-exclamation-circle mt-0.5 mr-3"></i>
-        <div>
-          <h3 class="font-bold">Please correct the following errors:</h3>
-          <ul class="list-disc ml-5 mt-2">
-            <% @user.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Please correct the following errors:</strong>
+      <ul class="mb-0 mt-2">
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 
-  <div class="mb-4">
-    <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.text_field :name, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+  <div class="input-group mb-3">
+    <%= form.text_field :name, required: true, class: "form-control", placeholder: "Full Name" %>
+    <div class="input-group-append">
+      <div class="input-group-text">
+        <span class="fas fa-user"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :email_address, class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.email_field :email_address, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+  <div class="input-group mb-3">
+    <%= form.email_field :email_address, required: true, class: "form-control", placeholder: "Email address" %>
+    <div class="input-group-append">
+      <div class="input-group-text">
+        <span class="fas fa-envelope"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :phone_number, class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.text_field :phone_number, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+  <div class="input-group mb-3">
+    <%= form.text_field :phone_number, required: true, class: "form-control", placeholder: "Phone Number" %>
+    <div class="input-group-append">
+      <div class="input-group-text">
+        <span class="fas fa-phone"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :password, class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.password_field :password, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+  <div class="input-group mb-3">
+    <%= form.password_field :password, required: true, class: "form-control", placeholder: "Password" %>
+    <div class="input-group-append">
+      <div class="input-group-text">
+        <span class="fas fa-lock"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :password_confirmation, class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.password_field :password_confirmation, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+  <div class="input-group mb-3">
+    <%= form.password_field :password_confirmation, required: true, class: "form-control", placeholder: "Confirm Password" %>
+    <div class="input-group-append">
+      <div class="input-group-text">
+        <span class="fas fa-lock"></span>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit "Sign Up", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out" %>
+  <div class="row">
+    <div class="col-12">
+      <%= form.submit "Sign Up", class: "btn btn-primary btn-block" %>
+    </div>
   </div>
-
-  <p class="text-center mt-4 text-sm text-gray-600">
-    Already have an account?
-    <%= link_to "Sign in", new_session_path, class: "font-medium text-blue-600 hover:text-blue-500" %>
-  </p>
 <% end %>
+
+<p class="mb-0">
+  Already have an account?
+  <%= link_to "Sign in", new_session_path, class: "text-center" %>
+</p>

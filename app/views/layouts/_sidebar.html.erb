@@ -1,57 +1,109 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-  <%= link_to root_path, class: "brand-link" do %>
-    <span class="brand-text font-weight-light">Event Booking</span>
-  <% end %>
+<aside class="main-sidebar bg-white border-right d-flex flex-column justify-content-between" style="min-height: 100vh; width: 240px;">
+  <div>
+    <!-- Brand Logo -->
+    <div class="d-flex align-items-center px-3 py-4 border-bottom">
+      <%# <img src="/logo.png" alt="Event Booking Logo" class="rounded" style="width:40px; height:40px;"> %>
+      <span class="ml-2 font-weight-bold" style="font-size: 1.2rem; color: #2563eb;">Event Booking</span>
+    </div>
 
-  <div class="sidebar">
-    <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <% if Current.user&.role == "admin" %>
-          <li class="nav-item">
-            <%= link_to root_path, class: "nav-link #{controller_name == 'dashboards' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Dashboard</p>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to users_path, class: "nav-link #{controller_name == 'users' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-users"></i>
-              <p>Users</p>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to categories_path, class: "nav-link #{controller_name == 'categories' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-tags"></i>
-              <p>Categories</p>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to events_path, class: "nav-link #{controller_name == 'events' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-calendar"></i>
-              <p>Events</p>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to bookings_path, class: "nav-link #{controller_name == 'bookings' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-ticket-alt"></i>
-              <p>Bookings</p>
-            <% end %>
-          </li>
-        <% elsif Current.user&.role == "customer" %>
-          <li class="nav-item">
-            <%= link_to customer_bookings_path, class: "nav-link #{controller_name == 'bookings' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-ticket-alt"></i>
-              <p>My Bookings</p>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to customer_events_path, class: "nav-link #{controller_name == 'events' ? 'active' : ''}" do %>
-              <i class="nav-icon fas fa-calendar"></i>
-              <p>Events</p>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
+    <nav class="mt-3">
+      <% if Current.user&.role == "admin" %>
+        <!-- Admin Menu -->
+        <div class="sidebar-section px-3">
+          <div class="text-uppercase text-muted small mb-2">General</div>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-1">
+              <%= link_to root_path, class: "nav-link px-3 py-2 rounded #{controller_name == 'dashboards' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-th-large mr-2"></i>
+                Dashboard
+              <% end %>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section px-3 mt-3">
+          <div class="text-uppercase text-muted small mb-2">Management</div>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-1">
+              <%= link_to users_path, class: "nav-link px-3 py-2 rounded #{controller_name == 'users' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-users mr-2"></i>
+                Users
+              <% end %>
+            </li>
+            <li class="nav-item mb-1">
+              <%= link_to categories_path, class: "nav-link px-3 py-2 rounded #{controller_name == 'categories' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-tags mr-2"></i>
+                Categories
+              <% end %>
+            </li>
+            <li class="nav-item mb-1">
+              <%= link_to events_path, class: "nav-link px-3 py-2 rounded #{controller_name == 'events' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-calendar-alt mr-2"></i>
+                Events
+              <% end %>
+            </li>
+            <li class="nav-item mb-1">
+              <%= link_to bookings_path, class: "nav-link px-3 py-2 rounded #{controller_name == 'bookings' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-ticket-alt mr-2"></i>
+                Bookings
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      <% elsif Current.user&.role == "customer" %>
+        <!-- Customer Menu -->
+        <div class="sidebar-section px-3">
+          <div class="text-uppercase text-muted small mb-2">Browse</div>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-1">
+              <%= link_to customer_events_path, class: "nav-link px-3 py-2 rounded #{controller_path == 'customer/events' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-calendar-alt mr-2"></i>
+                Events
+              <% end %>
+            </li>
+            <li class="nav-item mb-1">
+              <%= link_to customer_bookings_path, class: "nav-link px-3 py-2 rounded #{controller_path == 'customer/bookings' ? 'active-sidebar-link' : 'sidebar-link-blue'}" do %>
+                <i class="fas fa-ticket-alt mr-2"></i>
+                My Bookings
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      <% end %>
     </nav>
   </div>
+
+  <!-- Logout at the bottom -->
+  <div class="px-3 pb-4">
+    <%= button_to session_path, method: :delete,
+          form: { class: "p-0 m-0 border-0 bg-transparent" },
+          data: { turbo_confirm: "Are you sure you want to log out?" } do %>
+      <span class="nav-link px-3 py-2 rounded text-danger text-left d-block sidebar-link-blue">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        Log out
+      </span>
+    <% end %>
+  </div>
 </aside>
+
+<style>
+/* Add this to your application.css or a custom CSS file */
+.active-sidebar-link {
+  background: #2563eb;
+  color: #fff !important;
+  font-weight: bold;
+}
+.sidebar-link-blue {
+  color: #2563eb !important;
+  background: transparent;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-link-blue:hover, .sidebar-link-blue:focus {
+  background: #e0e7ff !important;
+  color: #1e40af !important;
+}
+.nav-link {
+  transition: background 0.2s, color 0.2s;
+}
+</style>

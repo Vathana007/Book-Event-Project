@@ -1,2 +1,2 @@
 <h1 class="text-2xl font-bold mb-6 text-blue-900">Book Event: <%= @event.title %></h1>
-<%= render 'form', event: @event, booking: @booking %>
+<%= render 'form', event: @event, booking: @booking, back_path: (Current.user&.role == 'customer' ? customer_event_path(@event) : event_path(@event)) %>

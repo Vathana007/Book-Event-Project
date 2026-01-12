@@ -1,20 +1,51 @@
-<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/payments/new.html.erb -->
-<h1>Payment for Booking #<%= @booking.id %></h1>
-<p>
-  Amount:
-  <%= number_to_currency(@booking.ticket_type&.price.to_f * @booking.tickets.to_i) %>
-</p>
-
-<% if flash[:alert] %>
-  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-    <strong>Warning!</strong> <%= flash[:alert] %>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2 align-items-center">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-credit-card fa-lg text-primary mr-2"></i>
+        <h1 class="m-0 text-dark">Payment for Booking #<%= @booking.id %></h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to "Back to Booking", booking_path(@booking), class: "btn btn-secondary" %>
+      </div>
+    </div>
   </div>
-<% end %>
+</div>
 
-<%= form_with model: [@booking, @payment] do |form| %>
-  <div class="mb-4">
-    <%= form.label :payment_method, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.select :payment_method, Payment::PAYMENT_METHODS.map { |m| [m.titleize, m] }, {}, class: "form-control" %>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card card-primary card-outline shadow-sm">
+        <div class="card-body">
+          <p class="h5 mb-4">
+            <strong>Amount:</strong>
+            <span class="text-success">
+              <%= number_to_currency(@booking.ticket_type&.price.to_f * @booking.tickets.to_i) %>
+            </span>
+          </p>
+
+          <% if flash[:alert] %>
+            <div class="alert alert-danger">
+              <strong>Warning!</strong> <%= flash[:alert] %>
+            </div>
+          <% end %>
+
+          <%= form_with model: [@booking, @payment], local: true, class: "form-horizontal" do |form| %>
+            <div class="form-group row">
+              <%= form.label :payment_method, class: "col-sm-4 col-form-label font-weight-bold" %>
+              <div class="col-sm-8">
+                <%= form.select :payment_method, Payment::PAYMENT_METHODS.map { |m| [m.titleize, m] }, {}, class: "form-control" %>
+              </div>
+            </div>
+            <div class="form-group row mt-4">
+              <div class="col-sm-8 offset-sm-4">
+                <%= form.submit "Complete Payment", class: "btn btn-primary" %>
+                <%= link_to "Cancel", booking_path(@booking), class: "btn btn-outline-secondary ml-2" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-  <%= form.submit "Complete Payment", class: "btn btn-primary" %>
-<% end %>
+</div>

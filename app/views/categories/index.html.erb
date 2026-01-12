@@ -1,28 +1,71 @@
-<h1 class="text-3xl font-bold mb-6 text-blue-900">Categories</h1>
-
-<div class="overflow-x-auto rounded-lg shadow-lg">
-  <table class="min-w-full bg-white border border-gray-200">
-    <thead class="bg-blue-100">
-      <tr>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Name</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Description</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600"></th>
-      </tr>
-    </thead>
-    <%= form_with url: request.path, method: :get, local: true, class: "mb-4" do %>
-      <div class="flex">
-        <%= text_field_tag :q, params[:q], placeholder: "Search by ID or Name...", class: "border rounded-l px-4 py-2 w-full" %>
-        <%= submit_tag "Search", class: "bg-blue-600 text-white px-4 py-2 rounded-r" %>
+<!-- filepath: /home/chort-sereivathana/Documents/book-event-project/event-booking/app/views/categories/index.html.erb -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-list-alt mr-2 text-primary"></i>
+        <h1 class="m-0 text-dark">Categories Management</h1>
       </div>
-    <% end %>
-    <tbody id="categories">
-        <% @categories.each do |category| %>
-            <%= render partial: "category", locals: { category: category } %>
+      <div class="col-sm-6 text-right">
+        <%= link_to new_category_path, class: "btn btn-primary" do %>
+          <i class="fas fa-plus mr-1"></i>
+          New Category
         <% end %>
-    </tbody>
-  </table>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="mt-6">
-  <%= link_to 'Create Category', new_category_path, class: "inline-block bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200 hover:bg-blue-700 shadow" %>
+<div class="container-fluid">
+  <div class="card card-primary card-outline">
+    <div class="card-header">
+      <%= form_with url: categories_path, method: :get, local: true, class: "form-inline" do %>
+        <div class="input-group input-group-sm" style="width: 300px;">
+          <%= text_field_tag :q, params[:q], placeholder: "Search by Name...", class: "form-control" %>
+          <div class="input-group-append">
+            <%= submit_tag "Search", class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="card-body p-0">
+      <div style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-hover table-bordered mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th class="text-center" colspan="3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @categories.each do |category| %>
+              <tr id="<%= dom_id(category) %>">
+                <td><%= category.name %></td>
+                <td><%= category.description %></td>
+                <td class="text-center">
+                  <%= link_to category_path(category), class: "btn btn-info btn-sm", title: "Show" do %>
+                    <i class="fas fa-eye"></i>
+                    <span class="ml-1 d-none d-md-inline">Show</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to edit_category_path(category), class: "btn btn-warning btn-sm", title: "Edit" do %>
+                    <i class="fas fa-edit"></i>
+                    <span class="ml-1 d-none d-md-inline">Edit</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to category_path(category), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm", title: "Delete" do %>
+                    <i class="fas fa-trash"></i>
+                    <span class="ml-1 d-none d-md-inline">Delete</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

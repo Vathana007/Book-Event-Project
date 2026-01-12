@@ -1,41 +1,102 @@
-<h1 class="text-3xl ">Events</h1>
-<div class="overflow-x-auto rounded-lg shadow-lg">
-  <table class="min-w-full bg-white border border-gray-200">
-    <thead class="bg-blue-100">
-      <tr>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Title</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Location</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Price</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Date</th>
-        <th class="py-3 px-4 border-b text-left text-sm text-gray-600">Actions</th>
-      </tr>
-    </thead>
-    <%= form_with url: request.path, method: :get, local: true, class: "mb-4" do %>
-        <div class="flex">
-            <%= text_field_tag :q, params[:q], placeholder: "Search by ID or Name...", class: "border rounded-l px-4 py-2 w-full" %>
-            <%= submit_tag "Search", class: "bg-blue-600 text-white px-4 py-2 rounded-r" %>
-        </div>
-    <% end %>
-    <tbody>
-      <% @events.each do |event| %>
-        <tr>
-          <td class="py-3 px-4 border-b text-sm"><%= event.title %></td>
-          <td class="py-3 px-4 border-b text-sm"><%= event.location %></td>
-          <td class="py-3 px-4 border-b text-sm"><%= number_to_currency(event.price) %></td>
-          <td class="py-3 px-4 border-b text-sm"><%= event.start_time.strftime("%Y-%m-%d %H:%M") %></td>
-          <td class="py-3 px-4 border-b text-sm">
-            <%= link_to 'Booking', new_event_booking_path(event), class: "text-green-600 hover:underline" %>
-            <%= link_to 'Show', event_path(event), class: "text-blue-600 hover:underline" %>
-            <%= link_to 'Edit', edit_event_path(event), class: "text-yellow-600 hover:underline ml-2" %>
-            <%= link_to 'Delete', event_path(event), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?'}, class: "text-red-600 hover:underline" %>
-
-            <%= link_to "Manage Ticket Types", event_ticket_types_path(event), class: "text-purple-600 hover:underline ml-2" %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2 align-items-center">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-calendar-alt fa-lg text-primary mr-2"></i>
+        <h1 class="m-0 text-dark">Events Management</h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to new_event_path, class: "btn btn-primary" do %>
+          <i class="fas fa-plus mr-1"></i> New Event
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="mt-6">
-  <%= link_to 'New Event', new_event_path, class: "inline-block bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200 hover:bg-blue-700 shadow" %>
+
+<div class="container-fluid">
+  <div class="card card-primary card-outline">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <%# <h3 class="card-title mb-0">
+        <i class="fas fa-list-ul mr-2 text-primary"></i>
+        List of Events
+      </h3> %>
+      <div class="card-tools">
+        <%= form_with url: events_path, method: :get, local: true, class: "input-group input-group-sm" do %>
+          <%= text_field_tag :q, params[:q], placeholder: "Search by ID or Name...", class: "form-control" %>
+          <div class="input-group-append">
+            <%= submit_tag "Search", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-hover table-bordered mb-0 align-middle">
+          <thead class="thead-light">
+            <tr>
+              <th>Title</th>
+              <th>Location</th>
+              <th>Ticket Types</th>
+              <th>Date</th>
+              <th class="text-center" colspan="5">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @events.each do |event| %>
+              <tr>
+                <td><%= event.title %></td>
+                <td><%= event.location %></td>
+                <td>
+                  <% if event.ticket_types.any? %>
+                    <% event.ticket_types.limit(2).each do |tt| %>
+                      <span class="badge badge-success mr-1">
+                        <%= tt.name %>: <%= number_to_currency(tt.price) %>
+                      </span>
+                    <% end %>
+                    <% if event.ticket_types.count > 2 %>
+                      <span class="badge badge-secondary">+<%= event.ticket_types.count - 2 %> more</span>
+                    <% end %>
+                  <% else %>
+                    <span class="badge badge-warning">No ticket types</span>
+                  <% end %>
+                </td>
+                <td><%= event.start_time.strftime("%Y-%m-%d %H:%M") %></td>
+                <td class="text-center">
+                  <%= link_to new_event_booking_path(event), class: "btn btn-success btn-sm", title: "Book Tickets" do %>
+                    <i class="fas fa-ticket-alt"></i>
+                    <span class="ml-1 d-none d-md-inline">Book</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to event_path(event), class: "btn btn-info btn-sm", title: "Show Event" do %>
+                    <i class="fas fa-eye"></i>
+                    <span class="ml-1 d-none d-md-inline">Show</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to edit_event_path(event), class: "btn btn-warning btn-sm", title: "Edit Event" do %>
+                    <i class="fas fa-edit"></i>
+                    <span class="ml-1 d-none d-md-inline">Edit</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to event_path(event), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm", title: "Delete Event" do %>
+                    <i class="fas fa-trash"></i>
+                    <span class="ml-1 d-none d-md-inline">Delete</span>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to event_ticket_types_path(event), class: "btn btn-secondary btn-sm", title: "Manage Ticket Types" do %>
+                    <i class="fas fa-layer-group"></i>
+                    <span class="ml-1 d-none d-md-inline">Ticket Types</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-  before_action :require_admin
+  before_action :require_admin, except: [:index, :show]
 
   # GET /events
   def index
@@ -61,6 +61,6 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:title, :description, :location, :price, :available_tickets, :start_time, :end_time, :image, :category_id, :created_by)
+    params.require(:event).permit(:title, :description, :location, :start_time, :end_time, :image, :category_id, :created_by)
   end
 end

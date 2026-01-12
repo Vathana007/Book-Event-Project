@@ -18,7 +18,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= Current.user ? 'hold-transition sidebar-mini layout-fixed' : '' %>">
+  <body class="<%= Current.user ? 'hold-transition sidebar-mini layout-fixed' : 'hold-transition login-page' %>">
     <% if Current.user %>
       <!-- Admin/Customer Dashboard Layout -->
       <div class="wrapper">
@@ -68,7 +68,7 @@
             <h2 class="text-center text-4xl font-extrabold text-white mb-2">
               Event Booking System
             </h2>
-            <p class="text-blue-100 text-sm">Manage your events and bookings</p>
+            <%# <p class="text-blue-100 text-sm">Manage your events and bookings</p> %>
           </div>
         </div>
         

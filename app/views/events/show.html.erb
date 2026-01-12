@@ -1,91 +1,80 @@
-<div class="max-w-5xl mx-auto px-4 py-10">
-
-  <!-- Header -->
-  <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-      <% if @event.image&.attached? %>
-        <div class="mb-6">
-          <%= image_tag @event.image, class: "w-full h-64 object-cover rounded-xl shadow" %>
-        </div>
-      <% end %>
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <span class="inline-block mb-2 px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
-          <i class="fas fa-tag mr-1"></i> <%= @event.category.name %>
-        </span>
-
-        <h1 class="text-3xl font-extrabold text-gray-900">
-          <%= @event.title %>
-        </h1>
-
-        <p class="text-gray-600 mt-2 flex items-center">
-          <i class="fas fa-location-dot mr-2 text-gray-400"></i>
-          <%= @event.location %>
-        </p>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-calendar-alt mr-2 text-primary"></i>
+        <h1 class="m-0 text-dark"><%= @event.title %></h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to edit_event_path(@event), class: "btn btn-warning mr-2" do %>
+          <i class="fas fa-edit"></i> Edit
+        <% end %>
+        <%= link_to events_path, class: "btn btn-secondary" do %>
+          <i class="fas fa-arrow-left"></i> Back
+        <% end %>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Details Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-    <!-- Main Content -->
-    <div class="md:col-span-2 bg-white rounded-2xl shadow-lg p-8 space-y-6">
-
-      <!-- Date & Time -->
-      <div class="flex items-start gap-4">
-        <i class="fas fa-calendar-days text-blue-600 text-xl mt-1"></i>
-        <div>
-          <p class="font-semibold text-gray-800">Date & Time</p>
-          <p class="text-gray-600">
-            <%= @event.start_time.strftime("%A, %d %B %Y") %><br>
-            <%= @event.start_time.strftime("%I:%M %p") %> – 
-            <%= @event.end_time.strftime("%I:%M %p") %>
-          </p>
-        </div>
-      </div>
-
-      <!-- Description -->
-      <div class="flex items-start gap-4">
-        <i class="fas fa-align-left text-blue-600 text-xl mt-1"></i>
-        <div>
-          <p class="font-semibold text-gray-800">About this event</p>
-          <p class="text-gray-600 leading-relaxed">
-            <%= @event.description %>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 space-y-6">
-
-      <!-- Ticket Types -->
-      <div>
-        <p class="text-lg font-semibold mb-2">Ticket Types</p>
-        <% @event.ticket_types.each do |ticket_type| %>
-          <div class="mb-4 p-4 border rounded-lg flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-              <span class="font-bold"><%= ticket_type.name %></span>
-              <span class="text-green-600 font-bold">$<%= number_with_precision(ticket_type.price, precision: 2) %></span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-500 text-sm">Available: <%= ticket_type.available_tickets %></span>
-              <% if ticket_type.available_tickets > 0 %>
-                <%= link_to "Book #{ticket_type.name}",
-                  new_event_ticket_type_booking_path(@event, ticket_type),
-                  class: "px-4 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition" %>
-              <% else %>
-                <span class="px-3 py-1 text-sm font-semibold text-red-700 bg-red-100 rounded-full">
-                  Sold Out
-                </span>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card card-primary card-outline shadow-sm mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-5">
+              <% if @event.image&.attached? %>
+                <%= image_tag @event.image.variant(resize_to_limit: [400, 300]), class: "img-fluid rounded shadow mb-3" %>
               <% end %>
+              <p>
+                <span class="badge badge-info">
+                  <i class="fas fa-tag mr-1"></i> <%= @event.category.name %>
+                </span>
+              </p>
+              <p>
+                <i class="fas fa-location-dot mr-2 text-gray-400"></i>
+                <%= @event.location %>
+              </p>
+              <p>
+                <i class="fas fa-calendar-days text-blue-600 mr-2"></i>
+                <%= @event.start_time.strftime("%A, %d %B %Y %I:%M %p") %> -
+                <%= @event.end_time.strftime("%I:%M %p") %>
+              </p>
+            </div>
+            <div class="col-md-7">
+              <h4 class="font-weight-bold mb-3">About this event</h4>
+              <p class="text-muted"><%= @event.description %></p>
+              <hr>
+              <h5 class="font-weight-bold mb-2">Ticket Types</h5>
+              <% if @event.ticket_types.any? %>
+                <% @event.ticket_types.each do |ticket_type| %>
+                  <div class="mb-3 p-3 border rounded d-flex justify-content-between align-items-center">
+                    <div>
+                      <span class="font-weight-bold"><%= ticket_type.name %></span>
+                      <span class="badge badge-success ml-2">$<%= number_with_precision(ticket_type.price, precision: 2) %></span>
+                      <span class="badge badge-info ml-2">Available: <%= ticket_type.available_tickets %></span>
+                    </div>
+                    <div>
+                      <% if ticket_type.available_tickets > 0 %>
+                        <%= link_to "Book", new_event_ticket_type_booking_path(@event, ticket_type), class: "btn btn-primary btn-sm" %>
+                      <% else %>
+                        <span class="badge badge-danger">Sold Out</span>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="alert alert-warning">
+                  <i class="fas fa-exclamation-triangle mr-2"></i>
+                  No ticket types available for this event.
+                </div>
+              <% end %>
+              <%= link_to "Manage Ticket Types", event_ticket_types_path(@event), class: "btn btn-secondary mt-3" %>
             </div>
           </div>
-        <% end %>
-        <div class="mt-6">
-            <%= link_to "Back to Events", events_path, class: "btn btn-secondary" %>
         </div>
-     </div>
+      </div>
     </div>
   </div>
 </div>

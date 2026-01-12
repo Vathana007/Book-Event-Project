@@ -1,90 +1,92 @@
-<h1 class="text-2xl font-bold mb-6 text-blue-900">All Bookings</h1>
-
-<!-- Search -->
-<%= form_with url: request.path, method: :get, local: true, class: "mb-6" do %>
-  <div class="flex max-w-md">
-    <%= text_field_tag :q, params[:q],
-        placeholder: "Search by ID or Name...",
-        class: "flex-1 border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
-
-    <%= submit_tag "Search",
-        class: "bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-r font-medium" %>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2 align-items-center">
+      <div class="col-sm-6 d-flex align-items-center">
+        <i class="fas fa-ticket-alt fa-lg text-primary mr-2"></i>
+        <h1 class="m-0 text-dark">All Bookings</h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <%= link_to "Export CSV", export_bookings_path(format: :csv), class: "btn btn-success mr-2" %>
+        <%= link_to "Export PDF", export_bookings_path(format: :pdf), class: "btn btn-danger" %>
+      </div>
+    </div>
   </div>
-<% end %>
-
-<div class="mb-4 flex justify-end">
-  <%= link_to "Export CSV", export_bookings_path(format: :csv), class: "btn btn-success mb-2" %>
-  <%= link_to "Export PDF", export_bookings_path(format: :pdf), class: "btn btn-danger mb-2" %>
 </div>
 
-<div class="overflow-x-auto rounded-lg shadow-lg">
-  <table class="min-w-full bg-white border border-gray-200">
-    <thead class="bg-blue-100">
-      <tr>
-        <th class="py-3 px-4 border-b text-left text-sm font-semibold text-gray-700">Name</th>
-        <th class="py-3 px-4 border-b text-left text-sm font-semibold text-gray-700">Event</th>
-        <th class="py-3 px-4 border-b text-left text-sm font-semibold text-gray-700">Status</th>
-        <th class="py-3 px-4 border-b text-left text-sm font-semibold text-gray-700">Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @bookings.each do |booking| %>
-        <tr class="hover:bg-gray-50 transition">
-          <td class="py-3 px-4 border-b text-sm text-gray-800">
-            <%= booking.name %>
-          </td>
-          <td class="py-3 px-4 border-b text-sm text-gray-800">
-            <%= booking.event&.title || "N/A" %>
-          </td>
-          <td class="py-3 px-4 border-b text-sm">
-            <%# Booking status badge %>
-            <% if booking.status == "confirmed" %>
-              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-green-700 bg-green-100 text-xs font-semibold">
-                ✔ Confirmed
-              </span>
-            <% elsif booking.status == "pending" %>
-              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-yellow-700 bg-yellow-100 text-xs font-semibold">
-                ⏳ Pending
-              </span>
-            <% elsif booking.status == "cancelled" %>
-              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-red-700 bg-red-100 text-xs font-semibold">
-                ✖ Cancelled
-              </span>
-            <% else %>
-              <span class="px-3 py-1 rounded-full text-gray-600 bg-gray-100 text-xs">
-                Unknown
-              </span>
-            <% end %>
-            <%# Payment status badge %>
-            <% if booking.payment&.status == "completed" %>
-              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-blue-700 bg-blue-100 text-xs font-semibold ml-2">
-                💰 Paid
-              </span>
-            <% else %>
-              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-gray-700 bg-gray-100 text-xs font-semibold ml-2">
-                💸 Unpaid
-              </span>
-            <% end %>
-          </td>
-          <td class="py-3 px-4 border-b text-sm flex gap-2">
-            <%= link_to "Show", booking_path(booking), class: "text-blue-600 hover:underline" %>
-            <% if booking.status == "pending" && (!booking.payment || booking.payment.status != "completed") %>
-              <%= link_to "Complete Payment", new_booking_payment_path(booking), class: "text-green-600 hover:underline" %>
-            <% end %>
-            <% if booking.status == "pending" %>
-              <%= link_to "Cancel", booking_path(booking), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
-            <% end %>
-          </td>
-        </tr>
+<div class="container-fluid">
+  <div class="card card-primary card-outline">
+    <div class="card-header">
+      <%= form_with url: request.path, method: :get, local: true, class: "form-inline" do %>
+        <div class="input-group input-group-sm" style="width: 300px;">
+          <%= text_field_tag :q, params[:q], placeholder: "Search by ID or Name...", class: "form-control" %>
+          <div class="input-group-append">
+            <%= submit_tag "Search", class: "btn btn-primary" %>
+          </div>
+        </div>
       <% end %>
-    </tbody>
-  </table>
-</div>
-
-<!-- Empty State -->
-<% if @bookings.empty? %>
-  <div class="mt-6 text-center text-gray-500">
-    No bookings found.
+    </div>
+    <div class="card-body p-0">
+      <div style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-hover table-bordered mb-0 align-middle">
+          <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th>Event</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @bookings.each do |booking| %>
+              <tr>
+                <td><%= booking.name %></td>
+                <td><%= booking.event&.title || "N/A" %></td>
+                <td>
+                  <%# Booking status badge %>
+                  <% if booking.status == "confirmed" %>
+                    <span class="badge badge-success"><i class="fas fa-check mr-1"></i>Confirmed</span>
+                  <% elsif booking.status == "pending" %>
+                    <span class="badge badge-warning"><i class="fas fa-hourglass-half mr-1"></i>Pending</span>
+                  <% elsif booking.status == "cancelled" %>
+                    <span class="badge badge-danger"><i class="fas fa-times mr-1"></i>Cancelled</span>
+                  <% else %>
+                    <span class="badge badge-secondary">Unknown</span>
+                  <% end %>
+                  <%# Payment status badge %>
+                  <% if booking.payment&.status == "completed" %>
+                    <span class="badge badge-primary ml-2"><i class="fas fa-money-bill-wave mr-1"></i>Paid</span>
+                  <% else %>
+                    <span class="badge badge-secondary ml-2"><i class="fas fa-money-bill-wave mr-1"></i>Unpaid</span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to booking_path(booking), class: "btn btn-info btn-sm", title: "Show" do %>
+                    <i class="fas fa-eye"></i>
+                    <span class="ml-1 d-none d-md-inline">Show</span>
+                  <% end %>
+                  <% if booking.status == "pending" && (!booking.payment || booking.payment.status != "completed") %>
+                    <%= link_to new_booking_payment_path(booking), class: "btn btn-success btn-sm", title: "Complete Payment" do %>
+                      <i class="fas fa-credit-card"></i>
+                      <span class="ml-1 d-none d-md-inline">Pay</span>
+                    <% end %>
+                  <% end %>
+                  <% if booking.status == "pending" %>
+                    <%= link_to booking_path(booking), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm", title: "Cancel" do %>
+                      <i class="fas fa-times"></i>
+                      <span class="ml-1 d-none d-md-inline">Cancel</span>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% if @bookings.empty? %>
+        <div class="p-4 text-center text-muted">
+          No bookings found.
+        </div>
+      <% end %>
+    </div>
   </div>
-<% end %>
+</div>

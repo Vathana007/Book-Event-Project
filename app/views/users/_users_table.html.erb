@@ -1,0 +1,33 @@
+<table class="table table-hover table-bordered mb-0">
+  <thead class="thead-light">
+    <tr>
+      <th>Name</th>
+      <th>Email Address</th>
+      <th>Role</th>
+      <th>Phone Number</th>
+      <th class="text-center" colspan="3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.email_address %></td>
+        <td>
+          <span class="badge <%= user.role == 'admin' ? 'badge-danger' : 'badge-primary' %>">
+            <%= user.role.capitalize %>
+          </span>
+        </td>
+        <td><%= user.phone_number %></td>
+        <td class="text-center"><%= link_to "Show", user_path(user), class: "btn btn-info btn-sm" %></td>
+        <td class="text-center"><%= link_to "Edit", edit_user_path(user), class: "btn btn-warning btn-sm" %></td>
+        <td class="text-center"><%= link_to "Delete", user_path(user), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% if users.empty? %>
+  <div class="p-4 text-center text-muted">
+    No users found.
+  </div>
+<% end %>

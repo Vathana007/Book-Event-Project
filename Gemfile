@@ -73,3 +73,5 @@ gem 'csv'
 gem 'prawn'
 
 gem 'prawn-table'
+
+gem "redis"

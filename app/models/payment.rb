@@ -9,4 +9,7 @@ class Payment < ApplicationRecord
   validates :amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :status, presence: true
   validates :transaction_ref, presence: true, uniqueness: true
+
+  
+
 end

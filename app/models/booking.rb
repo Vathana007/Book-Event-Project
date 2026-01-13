@@ -15,6 +15,8 @@ class Booking < ApplicationRecord
   validates :tickets, presence: true, numericality: { greater_than: 0 }
   validate :tickets_available, on: :create
 
+  after_create_commit :broadcast_booking
+
   def tickets_available
     if ticket_type && tickets > ticket_type.available_tickets
       errors.add(:tickets, "exceeds available tickets")
@@ -38,4 +40,11 @@ class Booking < ApplicationRecord
       end
     end
   end
+
+  private
+
+  def broadcast_booking
+    broadcast_prepend_later_to "bookings", target: "bookings_table", partial: "bookings/booking_row", locals: { booking: self }
+  end
+
 end

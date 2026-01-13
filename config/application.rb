@@ -11,6 +11,10 @@ module EventBooking
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
+    # config time zone
+    config.time_zone = "Asia/Phnom_Penh"
+    config.active_record.default_timezone = :local
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
